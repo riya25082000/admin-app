@@ -41,12 +41,62 @@ class _LearningHomePageState extends State<LearningHomePage> {
                   children: <Widget>[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
                           width: width * 0.1,
                           height: height * 0.05,
                           child: Center(child: Text(data[index]["moduleno"])),
                           color: Color(0xff17AD94), //
+                        ),
+                        PopupMenuButton(
+                          icon: Icon(Icons.more_horiz),
+                          onSelected: (value) {
+                            if (value == 1) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    title: Text(person == 0
+                                        ? "Edit Existing User Module"
+                                        : "Edit Existing Advisor Module"),
+                                    content: TextFormField(
+                                      decoration: InputDecoration(
+                                          hintText: "Enter New Module"),
+                                      keyboardType: TextInputType.number,
+                                      controller: modname,
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text("Edit"),
+                                        onPressed: () {},
+                                      ),
+                                      FlatButton(
+                                        child: new Text("Close"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                            if (value == 2) {
+                              print("delete");
+                            }
+                          },
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: 1,
+                              child: Text("Edit"),
+                            ),
+                            PopupMenuItem(
+                              value: 2,
+                              child: Text("Delete"),
+                            ),
+                          ],
                         )
                       ],
                     ),
