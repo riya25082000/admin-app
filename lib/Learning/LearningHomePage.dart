@@ -25,7 +25,6 @@ class _LearningHomePageState extends State<LearningHomePage> {
     );
     var message1 = jsonDecode(response1.body);
     if (message1["message"] == "Successful Updation") {
-      getQuesUser();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LearningHomePage()));
     } else {
@@ -45,7 +44,6 @@ class _LearningHomePageState extends State<LearningHomePage> {
     );
     var message1 = jsonDecode(response1.body);
     if (message1["message"] == "Successful Updation") {
-      getQuesAdvisor();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LearningHomePage()));
     } else {
@@ -182,61 +180,81 @@ class _LearningHomePageState extends State<LearningHomePage> {
                           child: Center(child: Text((index + 1).toString())),
                           color: Color(0xff17AD94), //
                         ),
-                        PopupMenuButton(
-                          icon: Icon(Icons.more_horiz),
-                          onSelected: (value) {
-                            if (value == 1) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: Text(person == 0
-                                        ? "Edit Existing User Module"
-                                        : "Edit Existing Advisor Module"),
-                                    content: TextFormField(
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoration(
-                                          hintText: "Enter New Module"),
-                                      controller: editmodname,
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text("Edit"),
-                                        onPressed: () {
-                                          x = index;
-                                          person == 0
-                                              ? UserModuleUpdate()
-                                              : AdvisorModuleUpdate();
-                                        },
-                                      ),
-                                      FlatButton(
-                                        child: new Text("Close"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                            if (value == 2) {
-                              person == 0
-                                  ? UserModuleDelete(
-                                      learnuser[index]['moduleno'])
-                                  : AdvisorModuleDelete(
-                                      learnadvisor[index]['moduleno']);
-                            }
-                          },
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 1,
-                              child: Text("Edit"),
+                        Column(
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Warning'),
+                                        content: Text(
+                                            "Are you sure you want to delete this module ?"),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("Yes"),
+                                            onPressed: () {
+                                              person == 0
+                                                  ? UserModuleDelete(
+                                                      learnuser[index]
+                                                          ['moduleno'])
+                                                  : AdvisorModuleDelete(
+                                                      learnadvisor[index]
+                                                          ['moduleno']);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: Text("Cancel"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    });
+                              },
                             ),
-                            PopupMenuItem(
-                              value: 2,
-                              child: Text("Delete"),
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    // return object of type Dialog
+                                    return AlertDialog(
+                                      title: Text(person == 0
+                                          ? "Edit Existing User Module"
+                                          : "Edit Existing Advisor Module"),
+                                      content: TextFormField(
+                                        keyboardType: TextInputType.text,
+                                        decoration: InputDecoration(
+                                            hintText: "Enter New Module"),
+                                        controller: editmodname,
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text("Edit"),
+                                          onPressed: () {
+                                            x = index;
+                                            person == 0
+                                                ? UserModuleUpdate()
+                                                : AdvisorModuleUpdate();
+                                          },
+                                        ),
+                                        FlatButton(
+                                          child: new Text("Close"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ],
                         )
