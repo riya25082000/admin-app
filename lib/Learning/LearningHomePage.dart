@@ -3,20 +3,153 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-import 'AddModules.dart';
 import 'Introduction.dart';
 import 'ModuleCode.dart';
 
 class LearningHomePage extends StatefulWidget {
-  String currentUserID;
-  LearningHomePage({@required this.currentUserID});
   @override
-  _LearningHomePageState createState() =>
-      _LearningHomePageState(currentUserID: currentUserID);
+  _LearningHomePageState createState() => _LearningHomePageState();
 }
 
 class _LearningHomePageState extends State<LearningHomePage> {
+  int x;
+  Future UserModuleUpdate() async {
+    var url =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserModuleUpdate.php';
+    final response1 = await http.post(
+      url,
+      body: jsonEncode(<String, String>{
+        'moduleno': learnuser[x]['moduleno'],
+        'modulename': editmodname.text,
+      }),
+    );
+    var message1 = jsonDecode(response1.body);
+    if (message1["message"] == "Successful Updation") {
+      getQuesUser();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LearningHomePage()));
+    } else {
+      print(message1["message"]);
+    }
+  }
+
+  Future AdvisorModuleUpdate() async {
+    var url =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/AdvisorModuleUpdate.php';
+    final response1 = await http.post(
+      url,
+      body: jsonEncode(<String, String>{
+        'moduleno': learnadvisor[x]['moduleno'],
+        'modulename': editmodname.text,
+      }),
+    );
+    var message1 = jsonDecode(response1.body);
+    if (message1["message"] == "Successful Updation") {
+      getQuesAdvisor();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LearningHomePage()));
+    } else {
+      print(message1["message"]);
+    }
+  }
+
+  void UserModuleDelete(var mno) async {
+    var url =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserModuleDelete.php';
+    final response = await http.post(
+      url,
+      body: jsonEncode(<String, String>{'moduleno': mno}),
+    );
+    var message = await jsonDecode(response.body);
+    if (message["message"] == "Successfully Deleted") {
+      getQuesUser();
+    } else {
+      print(message["message"]);
+    }
+  }
+
+  void AdvisorModuleDelete(var mno) async {
+    var url =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/AdvisorModuleDelete.php';
+    final response = await http.post(
+      url,
+      body: jsonEncode(<String, String>{'moduleno': mno}),
+    );
+    var message = await jsonDecode(response.body);
+    if (message["message"] == "Successfully Deleted") {
+      getQuesAdvisor();
+    } else {
+      print(message["message"]);
+    }
+  }
+
+  Future UserModuleInsert() async {
+    var url1 =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/getUser.php';
+    final response = await http.post(
+      url1,
+      body: jsonEncode(<String, String>{}),
+    );
+    var message = jsonDecode(response.body);
+    String oldu = message[0]['max(moduleno)'];
+    int bet = int.parse(oldu);
+    int latest = bet + 1;
+    var url =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserModuleInsert.php';
+    print("****************************************************");
+    print("$latest ** ${umod.text}");
+    print("****************************************************");
+    final response1 = await http.post(
+      url,
+      body: jsonEncode(<String, String>{
+        'moduleno': latest.toString(),
+        'modulename': umod.text,
+      }),
+    );
+    var message1 = jsonDecode(response1.body);
+    if (message1["message"] == "Successful Insertion") {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LearningHomePage()));
+    } else {
+      print(message1["message"]);
+    }
+  }
+
+  Future AdvisorModuleInsert() async {
+    var url1 =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/getAdvisor.php';
+    final response = await http.post(
+      url1,
+      body: jsonEncode(<String, String>{}),
+    );
+    var message = jsonDecode(response.body);
+    String oldu = message[0]['max(moduleno)'];
+    int bet = int.parse(oldu);
+    int latest = bet + 1;
+    var url =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/AdvisorModuleInsert.php';
+    print("****************************************************");
+    print("$latest ** ${amod.text}");
+    print("****************************************************");
+    final response1 = await http.post(
+      url,
+      body: jsonEncode(<String, String>{
+        'moduleno': latest.toString(),
+        'modulename': amod.text,
+      }),
+    );
+    var message1 = jsonDecode(response1.body);
+    if (message1["message"] == "Successful Insertion") {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LearningHomePage()));
+    } else {
+      print(message1["message"]);
+    }
+  }
+
+  TextEditingController umod = TextEditingController();
+  TextEditingController amod = TextEditingController();
+  TextEditingController editmodname = TextEditingController();
   Widget userbody(List data, double width, double height) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -46,7 +179,7 @@ class _LearningHomePageState extends State<LearningHomePage> {
                         Container(
                           width: width * 0.1,
                           height: height * 0.05,
-                          child: Center(child: Text(data[index]["moduleno"])),
+                          child: Center(child: Text((index + 1).toString())),
                           color: Color(0xff17AD94), //
                         ),
                         PopupMenuButton(
@@ -62,15 +195,20 @@ class _LearningHomePageState extends State<LearningHomePage> {
                                         ? "Edit Existing User Module"
                                         : "Edit Existing Advisor Module"),
                                     content: TextFormField(
+                                      keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
                                           hintText: "Enter New Module"),
-                                      keyboardType: TextInputType.number,
-                                      controller: modname,
+                                      controller: editmodname,
                                     ),
                                     actions: <Widget>[
                                       FlatButton(
                                         child: Text("Edit"),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          x = index;
+                                          person == 0
+                                              ? UserModuleUpdate()
+                                              : AdvisorModuleUpdate();
+                                        },
                                       ),
                                       FlatButton(
                                         child: new Text("Close"),
@@ -84,7 +222,11 @@ class _LearningHomePageState extends State<LearningHomePage> {
                               );
                             }
                             if (value == 2) {
-                              print("delete");
+                              person == 0
+                                  ? UserModuleDelete(
+                                      learnuser[index]['moduleno'])
+                                  : AdvisorModuleDelete(
+                                      learnadvisor[index]['moduleno']);
                             }
                           },
                           itemBuilder: (context) => [
@@ -131,12 +273,11 @@ class _LearningHomePageState extends State<LearningHomePage> {
   }
 
   void getQuesUser() async {
-    var url = 'http://sanjayagarwal.in/Finance App/learning.php';
+    var url =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserLearning.php';
     final response = await http.post(
       url,
-      body: jsonEncode(<String, String>{
-        "UserID": currentUserID,
-      }),
+      body: jsonEncode(<String, String>{}),
     );
     var message = await jsonDecode(response.body);
     print("****************************************");
@@ -150,7 +291,6 @@ class _LearningHomePageState extends State<LearningHomePage> {
   @override
   void initState() {
     print("****************************************");
-    print(currentUserID);
     print("****************************************");
     getQuesUser();
     getQuesAdvisor();
@@ -160,12 +300,11 @@ class _LearningHomePageState extends State<LearningHomePage> {
 
   List learnadvisor = [];
   void getQuesAdvisor() async {
-    var url = 'http://sanjayagarwal.in/Finance App/learningAdvisor.php';
+    var url =
+        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/AdvisorLearning.php';
     final response = await http.post(
       url,
-      body: jsonEncode(<String, String>{
-        "UserID": currentUserID,
-      }),
+      body: jsonEncode(<String, String>{}),
     );
     var message = await jsonDecode(response.body);
     print("****************************************");
@@ -176,9 +315,6 @@ class _LearningHomePageState extends State<LearningHomePage> {
     });
   }
 
-  String currentUserID;
-  TextEditingController modname = TextEditingController();
-  _LearningHomePageState({@required this.currentUserID});
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -256,13 +392,16 @@ class _LearningHomePageState extends State<LearningHomePage> {
                                   content: TextField(
                                     decoration: InputDecoration(
                                         hintText: "Enter New Module"),
-                                    keyboardType: TextInputType.number,
-                                    controller: modname,
+                                    controller: person == 0 ? umod : amod,
                                   ),
                                   actions: <Widget>[
                                     FlatButton(
                                       child: Text("Add"),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        person == 0
+                                            ? UserModuleInsert()
+                                            : AdvisorModuleInsert();
+                                      },
                                     ),
                                     FlatButton(
                                       child: new Text("Close"),
