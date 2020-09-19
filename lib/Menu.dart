@@ -1,3 +1,5 @@
+import 'package:adminapp/Learning/LearningHomePage.dart';
+import 'package:adminapp/Support/SupportHomePage.dart';
 import 'package:flutter/material.dart';
 
 class AdminMenu extends StatefulWidget {
@@ -29,29 +31,32 @@ class _AdminMenuState extends State<AdminMenu> {
           ListTile(
             title: Text('Support'),
             onTap: () {
-
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => Support()));
             },
           ),
           ListTile(
             title: Text('Learning'),
             onTap: () {
-
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => LearningHomePage()));
             },
           ),
           ListTile(
             title: Text('Search User'),
-            onTap: () {
-            },
+            onTap: () {},
           ),
           ListTile(
             title: Text('Search Advisor'),
-            onTap: () {
-            },
+            onTap: () {},
           ),
           ListTile(
             title: Text('NewsLetter'),
-            onTap: () {
-            },
+            onTap: () {},
           ),
         ],
       ),
