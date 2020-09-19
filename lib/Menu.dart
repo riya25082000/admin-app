@@ -1,6 +1,8 @@
 import 'package:adminapp/Learning/LearningHomePage.dart';
+import 'package:adminapp/SearchUser.dart';
 import 'package:adminapp/Support/SupportHomePage.dart';
 import 'package:flutter/material.dart';
+import 'SearchAdvisor.dart';
 
 class AdminMenu extends StatefulWidget {
   @override
@@ -48,11 +50,21 @@ class _AdminMenuState extends State<AdminMenu> {
           ),
           ListTile(
             title: Text('Search User'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => SearchUserPage()));
+            },
           ),
           ListTile(
             title: Text('Search Advisor'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => SearchAdvisorPage()));
+            },
           ),
           ListTile(
             title: Text('NewsLetter'),
