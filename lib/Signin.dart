@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   Future userLogin() async {
     String email = emailController.text;
     String password = passwordController.text;
-    var url = 'http://sanjayagarwal.in/Finance App/signin2.php';
+    var url = 'http://sanjayagarwal.in/Finance App/adminSignin.php';
     final response = await http.post(
       url,
       body: jsonEncode(<String, String>{
