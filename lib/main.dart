@@ -2,7 +2,7 @@ import 'package:adminapp/HomePage.dart';
 import 'package:adminapp/SearchUser.dart';
 import 'package:adminapp/Learning/LearningHomePage.dart';
 import 'package:flutter/material.dart';
-
+import 'SearchAdvisor.dart';
 import 'Signin.dart';
 
 void main() {
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      home: SearchAdvisorPage(),
     );
   }
 }
