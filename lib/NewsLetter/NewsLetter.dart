@@ -67,7 +67,7 @@ class _NewsLetterState extends State<NewsLetter> {
   List letteruse = [];
   void getLetterUser() async {
     var url =
-        'http://sanjayagarwal.in/Finance App/AdminApp/NewsLetter/UserNews.php';
+        'http://sanjayagarwal.in/Finance App/UserApp/NewsLetter/NewsLetterDetails.php';
     final response = await http.post(
       url,
       body: jsonEncode(<String, String>{}),
@@ -132,7 +132,7 @@ class _NewsLetterState extends State<NewsLetter> {
   List letteradvi = [];
   void getLetterAdvisor() async {
     var url =
-        'http://sanjayagarwal.in/Finance App/AdminApp/NewsLetter/AdvisorNews.php';
+        'http://sanjayagarwal.in/Finance App/AdvisorApp/NewsLetter/NewsLetterDetailsAdvisor.php';
     final response = await http.post(
       url,
       body: jsonEncode(<String, String>{}),
@@ -164,81 +164,85 @@ class _NewsLetterState extends State<NewsLetter> {
   }
 
   Widget letterbody(List data) {
-    return GridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 2,
-      crossAxisSpacing: 20.0,
-      mainAxisSpacing: 20.0,
-      physics: ScrollPhysics(),
-      children: List.generate(data.length, (index) {
-        return GestureDetector(
-          onTap: () {
-            print(data[index]['nurl']);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ShowLetter(
-                          int.parse(data[index]['nid']),
-                          data[index]['ntitle'],
-                          data[index]['nurl'],
-                        )));
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xff48F5D9), Colors.white]),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Warning'),
-                              content: Text(
-                                  "Are you sure you want to delete this module ?"),
-                              actions: <Widget>[
-                                FlatButton(
-                                  child: Text("Yes"),
-                                  onPressed: () {
-                                    c == 0
-                                        ? UserNewsDelete(data[index]['nid'])
-                                        : AdvisorNewsDelete(data[index]['nid']);
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                FlatButton(
-                                  child: Text("Cancel"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                )
-                              ],
-                            );
-                          });
-                    },
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.count(
+        shrinkWrap: true,
+        crossAxisCount: 2,
+        crossAxisSpacing: 20.0,
+        mainAxisSpacing: 20.0,
+        physics: ScrollPhysics(),
+        children: List.generate(data.length, (index) {
+          return GestureDetector(
+            onTap: () {
+              print(data[index]['nurl']);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ShowLetter(
+                            int.parse(data[index]['nid']),
+                            data[index]['ntitle'],
+                            data[index]['nurl'],
+                          )));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xff48F5D9), Colors.white]),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Warning'),
+                                content: Text(
+                                    "Are you sure you want to delete this module ?"),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("Yes"),
+                                    onPressed: () {
+                                      c == 0
+                                          ? UserNewsDelete(data[index]['nid'])
+                                          : AdvisorNewsDelete(
+                                              data[index]['nid']);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  FlatButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    data[index]['ntitle'],
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      data[index]['ntitle'],
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
@@ -295,9 +299,13 @@ class _NewsLetterState extends State<NewsLetter> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(c == 0
-                            ? 'User News Letter'
-                            : 'Advisor News Letter'),
+                        Text(
+                          c == 0 ? 'User News Letter' : 'Advisor News Letter',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color(0xff373D3F),
+                          ),
+                        ),
                         RaisedButton(
                           onPressed: () {
                             showDialog(
