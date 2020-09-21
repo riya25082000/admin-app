@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'advisor_data.dart';
 
 class SearchAdvisorPage extends StatefulWidget {
@@ -13,6 +12,12 @@ class _SearchAdvisorPage extends State<SearchAdvisorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Search Advisor' , style: TextStyle(color: Colors.black),),
+        actions:<Widget> [
+          IconButton(onPressed: () {
+            showSearch(context: context, delegate: AdvisorSearch());
+
+          }, icon: Icon(Icons.search),)
         backgroundColor: Color(0xff63E2E0),
         title: Text('Search Advisor'),
         actions: <Widget>[
@@ -43,6 +48,9 @@ class AdvisorSearch extends SearchDelegate<AdvisorData> {
 
   @override
   Widget buildLeading(BuildContext context) {
+    return IconButton(onPressed: () {
+      close(context, null);
+    }, icon: Icon(Icons.arrow_back_ios),);
     return IconButton(
       onPressed: () {
         close(context, null);
