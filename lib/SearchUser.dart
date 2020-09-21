@@ -15,7 +15,7 @@ class _SearchUserPage extends State<SearchUserPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search User'),
+        title: Text('Search User', style: TextStyle(color: Colors.black),),
         actions:<Widget> [
           IconButton(onPressed: () {
             showSearch(context: context, delegate: UserSearch());
@@ -41,7 +41,7 @@ class UserSearch extends SearchDelegate<UserData>{
   Widget buildLeading(BuildContext context) {
     return IconButton(onPressed: () {
       close(context, null);
-    }, icon: Icon(Icons.arrow_back),);
+    }, icon: Icon(Icons.arrow_back_ios),);
   }
 
   @override

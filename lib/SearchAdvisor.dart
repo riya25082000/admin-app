@@ -17,7 +17,7 @@ class _SearchAdvisorPage extends State<SearchAdvisorPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Advisor'),
+        title: Text('Search Advisor' , style: TextStyle(color: Colors.black),),
         actions:<Widget> [
           IconButton(onPressed: () {
             showSearch(context: context, delegate: AdvisorSearch());
@@ -43,7 +43,7 @@ class AdvisorSearch extends SearchDelegate<AdvisorData>{
   Widget buildLeading(BuildContext context) {
     return IconButton(onPressed: () {
       close(context, null);
-    }, icon: Icon(Icons.arrow_back),);
+    }, icon: Icon(Icons.arrow_back_ios),);
   }
 
   @override

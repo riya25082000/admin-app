@@ -1,4 +1,5 @@
 import 'package:adminapp/HomePage.dart';
+import 'package:adminapp/SearchUser.dart';
 import 'package:flutter/material.dart';
 import 'SearchAdvisor.dart';
 import 'Signin.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SearchAdvisorPage(),
+      home: SearchUserPage(),
     );
   }
 }
