@@ -1,4 +1,5 @@
 import 'package:adminapp/Learning/LearningHomePage.dart';
+import 'package:adminapp/NewsLetter/NewsLetter.dart';
 import 'package:adminapp/SearchUser.dart';
 import 'package:adminapp/Support/SupportHomePage.dart';
 import 'package:flutter/material.dart';
@@ -67,8 +68,13 @@ class _AdminMenuState extends State<AdminMenu> {
             },
           ),
           ListTile(
-            title: Text('NewsLetter'),
-            onTap: () {},
+            title: Text('News Letter'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => NewsLetter()));
+            },
           ),
         ],
       ),
