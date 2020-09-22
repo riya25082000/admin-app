@@ -32,15 +32,6 @@ class _AdminMenuState extends State<AdminMenu> {
             ),
           ),
           ListTile(
-            title: Text('Support'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => Support()));
-            },
-          ),
-          ListTile(
             title: Text('Learning'),
             onTap: () {
               Navigator.push(
@@ -74,6 +65,15 @@ class _AdminMenuState extends State<AdminMenu> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) => NewsLetter()));
+            },
+          ),
+          ListTile(
+            title: Text('Support'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => Support()));
             },
           ),
         ],
