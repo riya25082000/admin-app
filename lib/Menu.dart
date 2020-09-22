@@ -1,9 +1,9 @@
 import 'package:adminapp/Learning/LearningHomePage.dart';
 import 'package:adminapp/NewsLetter/NewsLetter.dart';
 import 'package:adminapp/SearchUser.dart';
-import 'package:adminapp/Support/SupportHomePage.dart';
 import 'package:flutter/material.dart';
 import 'SearchAdvisor.dart';
+import 'Support/Support.dart';
 
 class AdminMenu extends StatefulWidget {
   @override
