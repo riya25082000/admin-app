@@ -1,8 +1,11 @@
+
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'advisor_data.dart';
 
 class SearchAdvisorPage extends StatefulWidget {
@@ -35,17 +38,40 @@ class _SearchAdvisorPage extends State<SearchAdvisorPage> {
     userAdvisorData();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: Text('Search Advisor' , style: TextStyle(color: Colors.black),),
         actions:<Widget> [
           IconButton(onPressed: () {
             showSearch(context: context, delegate: AdvisorSearch(list: searchList));
             }, icon: Icon(Icons.search),)
+
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios),
+          color: Color(0xff373D3F),
+        ),
+        title: Text(
+          'SEARCH ADVISOR',
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              showSearch(context: context, delegate: AdvisorSearch());
+            },
+            icon: Icon(Icons.search),
+            color: Color(0xff373D3F),
+          )
+
         ],
+        backgroundColor: Color(0xff63E2E0),
       ),
     );
   }
@@ -77,13 +103,32 @@ class AdvisorSearch extends SearchDelegate<AdvisorData> {
       query = "";
       showSuggestions(context);
     },)];
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = "";
+        },
+      )
+    ];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
-    return IconButton(onPressed: () {
-      close(context, null);
-    }, icon: Icon(Icons.arrow_back_ios),);
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      },
+      icon: Icon(Icons.arrow_back_ios),
+    );
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      },
+      icon: Icon(Icons.arrow_back),
+    );
   }
 
   @override
@@ -102,10 +147,12 @@ class AdvisorSearch extends SearchDelegate<AdvisorData> {
         }
         return CircularProgressIndicator();
       },);
+    return Center(child: Text(query, style: TextStyle(fontSize: 20)));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+
     var listData =  query.isEmpty ? list : list.where((element) => element.contains(query)).toList();
     return listData.isEmpty ? Center(child: Text('NO ADVISOR FOUND',  style: TextStyle(fontSize: 20), )) : ListView.builder(
         itemCount: listData.length,
@@ -117,6 +164,38 @@ class AdvisorSearch extends SearchDelegate<AdvisorData> {
             },
             title: Text(listData[index]),);
         });
+    final advisorList = query.isEmpty
+        ? loadAdvisorData()
+        : loadAdvisorData().where((p) => p.UserName.startsWith(query)).toList();
+
+    return advisorList.isEmpty
+        ? Text(
+            'No Advisor Found',
+            style: TextStyle(fontSize: 20),
+          )
+        : ListView.builder(
+            itemCount: advisorList.length,
+            itemBuilder: (context, index) {
+              final AdvisorData listItem = advisorList[index];
+              return ListTile(
+                onTap: () {
+                  showResults(context);
+                },
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      listItem.UserName,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      listItem.UserID,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Divider()
+                  ],
+                ),
+              );
+            });
   }
 }
-
