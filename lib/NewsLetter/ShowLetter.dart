@@ -52,6 +52,7 @@ class _ShowLetterState extends State<ShowLetter> {
       body: _loading
           ? Center(
               child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
                 backgroundColor: Color(0xff63E2E0),
               ),
             )

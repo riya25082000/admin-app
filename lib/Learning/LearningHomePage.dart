@@ -149,137 +149,145 @@ class _LearningHomePageState extends State<LearningHomePage> {
   TextEditingController amod = TextEditingController();
   TextEditingController editmodname = TextEditingController();
   Widget userbody(List data, double width, double height) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 2,
-          crossAxisSpacing: 20.0,
-          mainAxisSpacing: 20.0,
-          physics: ScrollPhysics(),
-          children: List.generate(data.length, (index) {
-            return GestureDetector(
-              onTap: () {},
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xff48F5D9), Colors.white]),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          width: width * 0.1,
-                          height: height * 0.05,
-                          child: Center(child: Text((index + 1).toString())),
-                          color: Color(0xff17AD94), //
-                        ),
-                        Column(
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text('Warning'),
-                                        content: Text(
-                                            "Are you sure you want to delete this module ?"),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text("Yes"),
-                                            onPressed: () {
-                                              person == 0
-                                                  ? UserModuleDelete(
-                                                      learnuser[index]
-                                                          ['moduleno'])
-                                                  : AdvisorModuleDelete(
-                                                      learnadvisor[index]
-                                                          ['moduleno']);
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          FlatButton(
-                                            child: Text("Cancel"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          )
-                                        ],
+    return _loading
+        ? Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+              backgroundColor: Color(0xff63E2E0),
+            ),
+          )
+        : Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                crossAxisSpacing: 20.0,
+                mainAxisSpacing: 20.0,
+                physics: ScrollPhysics(),
+                children: List.generate(data.length, (index) {
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color(0xff48F5D9), Colors.white]),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                width: width * 0.1,
+                                height: height * 0.05,
+                                child:
+                                    Center(child: Text((index + 1).toString())),
+                                color: Color(0xff17AD94), //
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Warning'),
+                                              content: Text(
+                                                  "Are you sure you want to delete this module ?"),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text("Yes"),
+                                                  onPressed: () {
+                                                    person == 0
+                                                        ? UserModuleDelete(
+                                                            learnuser[index]
+                                                                ['moduleno'])
+                                                        : AdvisorModuleDelete(
+                                                            learnadvisor[index]
+                                                                ['moduleno']);
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                FlatButton(
+                                                  child: Text("Cancel"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          // return object of type Dialog
+                                          return AlertDialog(
+                                            title: Text(person == 0
+                                                ? "Edit Existing User Module"
+                                                : "Edit Existing Advisor Module"),
+                                            content: TextFormField(
+                                              keyboardType: TextInputType.text,
+                                              decoration: InputDecoration(
+                                                  hintText: "Enter New Module"),
+                                              controller: editmodname,
+                                            ),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text("Edit"),
+                                                onPressed: () {
+                                                  x = index;
+                                                  person == 0
+                                                      ? UserModuleUpdate()
+                                                      : AdvisorModuleUpdate();
+                                                },
+                                              ),
+                                              FlatButton(
+                                                child: new Text("Close"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       );
-                                    });
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    // return object of type Dialog
-                                    return AlertDialog(
-                                      title: Text(person == 0
-                                          ? "Edit Existing User Module"
-                                          : "Edit Existing Advisor Module"),
-                                      content: TextFormField(
-                                        keyboardType: TextInputType.text,
-                                        decoration: InputDecoration(
-                                            hintText: "Enter New Module"),
-                                        controller: editmodname,
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text("Edit"),
-                                          onPressed: () {
-                                            x = index;
-                                            person == 0
-                                                ? UserModuleUpdate()
-                                                : AdvisorModuleUpdate();
-                                          },
-                                        ),
-                                        FlatButton(
-                                          child: new Text("Close"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Divider(
-                          color: Colors.black,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            data[index]["modulename"],
-                            textAlign: TextAlign.center,
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
-                        ),
-                      ],
+                          Column(
+                            children: <Widget>[
+                              Divider(
+                                color: Colors.black,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  data[index]["modulename"],
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            );
-          })),
-    );
+                  );
+                })),
+          );
   }
 
   List learnuser = [];
@@ -290,7 +298,11 @@ class _LearningHomePageState extends State<LearningHomePage> {
     });
   }
 
+  bool _loading;
   void getQuesUser() async {
+    setState(() {
+      _loading = true;
+    });
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserLearning.php';
     final response = await http.post(
@@ -303,6 +315,7 @@ class _LearningHomePageState extends State<LearningHomePage> {
     print("****************************************");
     setState(() {
       learnuser = message;
+      _loading = false;
     });
   }
 
