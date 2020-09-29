@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:adminapp/UserInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -124,7 +125,12 @@ class UserSearch extends SearchDelegate<String> {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 var list = snapshot.data[index];
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => UserInfo(
+                              currentUserID: "987654321",
+                            )));
                 return ListTile(
                   title: Text(list['UserID']),
                 );
