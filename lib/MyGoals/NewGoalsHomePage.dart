@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../erroralert.dart';
 import 'AddGoals.dart';
 import 'GoalsType.dart';
 import 'modifygoals.dart';
@@ -47,22 +51,31 @@ class _NewGoalsPageState extends State<NewGoalsPage> {
     setState(() {
       _loading = true;
     });
-    var url =
-        'http://sanjayagarwal.in/Finance App/UserApp/Goals/GoalDetails.php';
-    final response = await http.post(
-      url,
-      body: jsonEncode(<String, String>{
-        "UserID": currentUserID,
-      }),
-    );
-    var message = await jsonDecode(response.body);
-    print("****************************************");
-    print(message);
-    print("****************************************");
-    setState(() {
-      data = message;
-      _loading = false;
-    });
+    try {
+      var url =
+          'http://sanjayagarwal.in/Finance App/UserApp/Goals/GoalDetails.php';
+      final response = await http.post(
+        url,
+        body: jsonEncode(<String, String>{
+          "UserID": currentUserID,
+        }),
+      ).timeout(Duration(seconds: 30));
+      var message = await jsonDecode(response.body);
+      print("****************************************");
+      print(message);
+      print("****************************************");
+      setState(() {
+        data = message;
+        _loading = false;
+      });
+    }
+    on TimeoutException catch (e){
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
   }
 
   @override

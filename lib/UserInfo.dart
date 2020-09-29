@@ -1,6 +1,8 @@
 import 'package:adminapp/Income_Expenses/income2.dart';
 import 'package:adminapp/MyGoals/NewGoalsHomePage.dart';
+import 'package:adminapp/SearchUser.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'Rewards.dart';
 
@@ -20,7 +22,14 @@ class _UserInfoState extends State<UserInfo> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Future.delayed(Duration.zero, () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => SearchUserPage()));
+
+            });
+
           },
           icon: Icon(Icons.arrow_back_ios),
           color: Color(0xff373D3F),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:adminapp/UserInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
 
 class SearchUserPage extends StatefulWidget {
@@ -38,7 +39,11 @@ class _SearchUserPage extends State<SearchUserPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.pop(context);
+            });
+           // Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back_ios),
           color: Color(0xff373D3F),
@@ -125,12 +130,19 @@ class UserSearch extends SearchDelegate<String> {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 var list = snapshot.data[index];
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => UserInfo(
-                              currentUserID: "987654321",
-                            )));
+
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+
+                  // add your code here.
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => UserInfo(
+                            currentUserID: "987654321",
+                          )));
+                });
+
                 return ListTile(
                   title: Text(list['UserID']),
                 );
