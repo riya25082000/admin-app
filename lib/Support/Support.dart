@@ -1,16 +1,24 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../erroralert.dart';
 import 'showQuestion.dart';
 
 class Support extends StatefulWidget {
+  String currentUserID;
+  Support({@required this.currentUserID});
   @override
   _SupportState createState() => _SupportState();
 }
 
 class _SupportState extends State<Support> {
   List advisorcategory = [], usercategory = [];
+
+  String get currentUserID => null;
 
   void AdvisorCategoryDelete(var sno) async {
     var url =
@@ -47,20 +55,29 @@ class _SupportState extends State<Support> {
     setState(() {
       _loading = true;
     });
-    var url2 =
-        'http://sanjayagarwal.in/Finance App/UserApp/Support/SupportCategory.php';
-    final response2 = await http.post(
-      url2,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message2 = await jsonDecode(response2.body);
-    print("****************************************");
-    print(message2);
-    print("****************************************");
-    setState(() {
-      usercategory = message2;
-      _loading = false;
-    });
+    try {
+      var url2 =
+          'http://sanjayagarwal.in/Finance App/UserApp/Support/SupportCategory.php';
+      final response2 = await http.post(
+        url2,
+        body: jsonEncode(<String, String>{}),
+      );
+      var message2 = await jsonDecode(response2.body);
+      print("****************************************");
+      print(message2);
+      print("****************************************");
+      setState(() {
+        usercategory = message2;
+        _loading = false;
+      });
+    }
+    on TimeoutException catch (e){
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
   }
 
   Future UserCategoryInsert() async {

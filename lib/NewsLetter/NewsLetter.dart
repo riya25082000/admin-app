@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
+import '../erroralert.dart';
 import 'ShowLetter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -15,6 +19,8 @@ class _NewsLetterState extends State<NewsLetter> {
   TextEditingController newurl = TextEditingController();
   TextEditingController existnews = TextEditingController();
   TextEditingController existurl = TextEditingController();
+
+  String get currentUserID => null;
 
   Future UserNewsInsert() async {
     var url1 =
@@ -136,19 +142,28 @@ class _NewsLetterState extends State<NewsLetter> {
 
   List letteradvi = [];
   void getLetterAdvisor() async {
-    var url =
-        'http://sanjayagarwal.in/Finance App/AdvisorApp/NewsLetter/NewsLetterDetailsAdvisor.php';
-    final response = await http.post(
-      url,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = await jsonDecode(response.body);
-    print("****************************************");
-    print(message);
-    print("****************************************");
-    setState(() {
-      letteradvi = message;
-    });
+    try {
+      var url =
+          'http://sanjayagarwal.in/Finance App/AdvisorApp/NewsLetter/NewsLetterDetailsAdvisor.php';
+      final response = await http.post(
+        url,
+        body: jsonEncode(<String, String>{}),
+      );
+      var message = await jsonDecode(response.body);
+      print("****************************************");
+      print(message);
+      print("****************************************");
+      setState(() {
+        letteradvi = message;
+      });
+    }
+    on TimeoutException catch (e){
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
   }
 
   @override

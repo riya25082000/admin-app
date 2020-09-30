@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:adminapp/Income_Expenses/addincome.dart';
 import 'package:adminapp/Income_Expenses/modifyIE.dart';
@@ -5,7 +7,8 @@ import 'package:adminapp/Income_Expenses/widgetcode.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+////
+import '../erroralert.dart';
 import 'categoryinfo.dart';
 
 class income2 extends StatefulWidget {
@@ -62,44 +65,53 @@ class _income2State extends State<income2> {
     setState(() {
       _loading = true;
     });
-    var url2 =
-        'http://sanjayagarwal.in/Finance App/UserApp/IncomeExpense/IncomeSum.php';
-    final response2 = await http.post(
-      url2,
-      body: jsonEncode(<String, String>{
-        "UserID": widget.currentUserID,
-      }),
-    );
-    var message2 = jsonDecode(response2.body);
-    totalincome = int.parse(message2[0]["sum(Amount)"]);
-    var url3 =
-        'http://sanjayagarwal.in/Finance App/UserApp/IncomeExpense/ExpenseSum.php';
-    final response3 = await http.post(
-      url3,
-      body: jsonEncode(<String, String>{
-        "UserID": widget.currentUserID,
-      }),
-    );
-    var message3 = jsonDecode(response3.body);
-    totalexpense = int.parse(message3[0]["sum(Amount)"]);
-    savings = totalincome - totalexpense;
-    calculatePotential(dropdown, rate, time);
-    var url =
-        'http://sanjayagarwal.in/Finance App/UserApp/IncomeExpense/IncomeDetails.php';
-    final response = await http.post(
-      url,
-      body: jsonEncode(<String, String>{
-        "UserID": currentUserID,
-      }),
-    );
-    var message1 = await jsonDecode(response.body);
-    print("****************************************");
-    print(message1);
-    print("****************************************");
-    setState(() {
-      i = message1;
-      _loading = false;
-    });
+    try {
+      var url2 =
+          'http://sanjayagarwal.in/Finance App/UserApp/IncomeExpense/IncomeSum.php';
+      final response2 = await http.post(
+        url2,
+        body: jsonEncode(<String, String>{
+          "UserID": widget.currentUserID,
+        }),
+      ).timeout(Duration(seconds: 30));;
+      var message2 = jsonDecode(response2.body);
+      totalincome = int.parse(message2[0]["sum(Amount)"]);
+      var url3 =
+          'http://sanjayagarwal.in/Finance App/UserApp/IncomeExpense/ExpenseSum.php';
+      final response3 = await http.post(
+        url3,
+        body: jsonEncode(<String, String>{
+          "UserID": widget.currentUserID,
+        }),
+      ).timeout(Duration(seconds: 30));;
+      var message3 = jsonDecode(response3.body);
+      totalexpense = int.parse(message3[0]["sum(Amount)"]);
+      savings = totalincome - totalexpense;
+      calculatePotential(dropdown, rate, time);
+      var url =
+          'http://sanjayagarwal.in/Finance App/UserApp/IncomeExpense/IncomeDetails.php';
+      final response = await http.post(
+        url,
+        body: jsonEncode(<String, String>{
+          "UserID": currentUserID,
+        }),
+      ).timeout(Duration(seconds: 30));
+      var message1 = await jsonDecode(response.body);
+      print("****************************************");
+      print(message1);
+      print("****************************************");
+      setState(() {
+        i = message1;
+        _loading = false;
+      });
+    }
+    on TimeoutException catch (e){
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
   }
 
   void getExpense() async {

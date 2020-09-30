@@ -1,18 +1,26 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../erroralert.dart';
 import 'Introduction.dart';
 import 'ModuleCode.dart';
 
 class LearningHomePage extends StatefulWidget {
+  String currentUserID;
+  LearningHomePage({@required this.currentUserID});
   @override
   _LearningHomePageState createState() => _LearningHomePageState();
 }
 
 class _LearningHomePageState extends State<LearningHomePage> {
   int x;
+
+  String get currentUserID => null;
   Future UserModuleUpdate() async {
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserModuleUpdate.php';
@@ -333,17 +341,26 @@ class _LearningHomePageState extends State<LearningHomePage> {
   void getQuesAdvisor() async {
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Learning/AdvisorLearning.php';
-    final response = await http.post(
-      url,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = await jsonDecode(response.body);
-    print("****************************************");
-    print(message);
-    print("****************************************");
-    setState(() {
-      learnadvisor = message;
-    });
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode(<String, String>{}),
+      ).timeout(Duration(seconds: 30));
+      var message = await jsonDecode(response.body);
+      print("****************************************");
+      print(message);
+      print("****************************************");
+      setState(() {
+        learnadvisor = message;
+      });
+    }
+    on TimeoutException catch (e){
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
   }
 
   @override
