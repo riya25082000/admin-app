@@ -30,6 +30,26 @@ class _RewardandReferState extends State<RewardandRefer> {
     ['rewards1', 'rewards detail'],
   ];
   TextEditingController bonus = TextEditingController();
+  int total = 0;
+  void SumBonus() async {
+    setState(() {
+      _loading = true;
+    });
+    var url3 =
+        'http://sanjayagarwal.in/Finance App/UserApp/Rewards/RewardTotal.php';
+    final response3 = await http.post(
+      url3,
+      body: jsonEncode(<String, String>{
+        "UserID": currentUserID,
+      }),
+    );
+    var message3 = jsonDecode(response3.body);
+    setState(() {
+      _loading = false;
+      total = int.parse(message3[0]["sum(rpoints)"]);
+    });
+  }
+
   void insertBonus() async {
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Rewards/AddBonus.php';
@@ -92,9 +112,6 @@ class _RewardandReferState extends State<RewardandRefer> {
   bool _loading;
   List rew = [];
   void getRewardHistory() async {
-    setState(() {
-      _loading = true;
-    });
     var url =
         'http://sanjayagarwal.in/Finance App/UserApp/Rewards/RewardHistory.php';
     try {
@@ -112,7 +129,6 @@ class _RewardandReferState extends State<RewardandRefer> {
       print("****************************************");
       setState(() {
         rew = message;
-        _loading = false;
       });
     } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
@@ -127,6 +143,7 @@ class _RewardandReferState extends State<RewardandRefer> {
   void initState() {
     getReferData();
     getRewardHistory();
+    SumBonus();
     // TODO: implement initState
     super.initState();
   }
@@ -201,6 +218,12 @@ class _RewardandReferState extends State<RewardandRefer> {
                             SizedBox(
                               height: 8,
                             ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Your Total Reward Points: '),
+                            Text(total.toString()),
                           ],
                         ),
                         Padding(

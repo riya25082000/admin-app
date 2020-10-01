@@ -1,5 +1,6 @@
 import 'package:adminapp/Learning/LearningHomePage.dart';
 import 'package:adminapp/NewsLetter/NewsLetter.dart';
+import 'package:adminapp/RewardCodes/RewardHomePage.dart';
 import 'package:adminapp/Rewards.dart';
 import 'package:adminapp/SearchUser.dart';
 import 'package:adminapp/createAdvisor.dart';
@@ -76,6 +77,15 @@ class _AdminMenuState extends State<AdminMenu> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) => CreateAdvisor()));
+            },
+          ),
+          ListTile(
+            title: Text('Rewards Details'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ShowRewards()));
             },
           ),
           ListTile(

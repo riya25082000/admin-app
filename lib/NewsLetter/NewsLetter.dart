@@ -47,11 +47,11 @@ class _NewsLetterState extends State<NewsLetter> {
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Insertion") {
+    if (message1 == "Successful Insertion") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => NewsLetter()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 
@@ -63,10 +63,10 @@ class _NewsLetterState extends State<NewsLetter> {
       body: jsonEncode(<String, String>{'nid': nno}),
     );
     var message = await jsonDecode(response.body);
-    if (message["message"] == "Successfully Deleted") {
+    if (message == "Successfully Deleted") {
       getLetterUser();
     } else {
-      print(message["message"]);
+      print(message);
     }
   }
 
@@ -117,11 +117,11 @@ class _NewsLetterState extends State<NewsLetter> {
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Insertion") {
+    if (message1 == "Successful Insertion") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => NewsLetter()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 
@@ -133,10 +133,10 @@ class _NewsLetterState extends State<NewsLetter> {
       body: jsonEncode(<String, String>{'nid': nno}),
     );
     var message = await jsonDecode(response.body);
-    if (message["message"] == "Successfully Deleted") {
+    if (message == "Successfully Deleted") {
       getLetterAdvisor();
     } else {
-      print(message["message"]);
+      print(message);
     }
   }
 
@@ -156,8 +156,7 @@ class _NewsLetterState extends State<NewsLetter> {
       setState(() {
         letteradvi = message;
       });
-    }
-    on TimeoutException catch (e){
+    } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
     } on Error catch (e) {
       alerterror(context, currentUserID);

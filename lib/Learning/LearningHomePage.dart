@@ -32,11 +32,11 @@ class _LearningHomePageState extends State<LearningHomePage> {
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Updation") {
+    if (message1 == "Successful Updation") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LearningHomePage()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 
@@ -51,11 +51,11 @@ class _LearningHomePageState extends State<LearningHomePage> {
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Updation") {
+    if (message1 == "Successful Updation") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LearningHomePage()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 
@@ -67,10 +67,10 @@ class _LearningHomePageState extends State<LearningHomePage> {
       body: jsonEncode(<String, String>{'moduleno': mno}),
     );
     var message = await jsonDecode(response.body);
-    if (message["message"] == "Successfully Deleted") {
+    if (message == "Successfully Deleted") {
       getQuesUser();
     } else {
-      print(message["message"]);
+      print(message);
     }
   }
 
@@ -82,10 +82,10 @@ class _LearningHomePageState extends State<LearningHomePage> {
       body: jsonEncode(<String, String>{'moduleno': mno}),
     );
     var message = await jsonDecode(response.body);
-    if (message["message"] == "Successfully Deleted") {
+    if (message == "Successfully Deleted") {
       getQuesAdvisor();
     } else {
-      print(message["message"]);
+      print(message);
     }
   }
 
@@ -113,11 +113,11 @@ class _LearningHomePageState extends State<LearningHomePage> {
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Insertion") {
+    if (message1 == "Successful Insertion") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LearningHomePage()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 
@@ -145,11 +145,11 @@ class _LearningHomePageState extends State<LearningHomePage> {
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Insertion") {
+    if (message1 == "Successful Insertion") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LearningHomePage()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 
@@ -342,10 +342,12 @@ class _LearningHomePageState extends State<LearningHomePage> {
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Learning/AdvisorLearning.php';
     try {
-      final response = await http.post(
-        url,
-        body: jsonEncode(<String, String>{}),
-      ).timeout(Duration(seconds: 30));
+      final response = await http
+          .post(
+            url,
+            body: jsonEncode(<String, String>{}),
+          )
+          .timeout(Duration(seconds: 30));
       var message = await jsonDecode(response.body);
       print("****************************************");
       print(message);
@@ -353,8 +355,7 @@ class _LearningHomePageState extends State<LearningHomePage> {
       setState(() {
         learnadvisor = message;
       });
-    }
-    on TimeoutException catch (e){
+    } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
     } on Error catch (e) {
       alerterror(context, currentUserID);
