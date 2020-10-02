@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'advisor_data.dart';
+import 'erroralert.dart';
 
 class SearchAdvisorPage extends StatefulWidget {
   @override
@@ -12,17 +15,29 @@ class SearchAdvisorPage extends StatefulWidget {
 
 class _SearchAdvisorPage extends State<SearchAdvisorPage> {
   List searchList = [];
+
+  String get currentUserID => null;
   Future userAdvisorData() async {
     var url = 'http://sanjayagarwal.in/Finance App/SearchAdvisor.php';
-    final response = await http.post(url);
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
+    try {
+      final response = await http.post(url);
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
 
-      for (var i = 0; i < jsonData.length; i++) {
-        searchList.add(jsonData[i]['Name']);
+        for (var i = 0; i < jsonData.length; i++) {
+          searchList.add(jsonData[i]['Name']);
+        }
+
+        print(searchList);
       }
-
-      print(searchList);
+    }
+    on TimeoutException catch (e) {
+    alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+    
+    alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+    alertinternet(context, currentUserID);
     }
   }
 

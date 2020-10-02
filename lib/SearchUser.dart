@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:adminapp/UserInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
+
+import 'erroralert.dart';
 
 class SearchUserPage extends StatefulWidget {
   @override
@@ -12,18 +16,33 @@ class SearchUserPage extends StatefulWidget {
 
 class _SearchUserPage extends State<SearchUserPage> {
   List searchList = [];
-  Future userSearchData() async {
-    var url = 'http://sanjayagarwal.in/Finance App/SearchUser.php';
-    final response = await http.post(url);
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
 
-      for (var i = 0; i < jsonData.length; i++) {
-        searchList.add(jsonData[i]['Name']);
+
+  get currentUserID => null;
+  Future userSearchData() async {
+
+    try {
+      var url = 'http://sanjayagarwal.in/Finance App/SearchUser.php';
+      final response = await http.post(url);
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        for (var i = 0; i < jsonData.length; i++) {
+          searchList.add(jsonData[i]['Name']);
+        }
+
+        print(searchList);
       }
 
-      print(searchList);
     }
+    on TimeoutException catch (e) {
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
+
   }
 
   @override
@@ -36,7 +55,15 @@ class _SearchUserPage extends State<SearchUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // body:  _loading
+      //     ? Center(
+      //   child: CircularProgressIndicator(
+      //     valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+      //     backgroundColor: Color(0xff63E2E0),
+      //   ),
+      // ),
       appBar: AppBar(
+
         leading: IconButton(
           onPressed: () {
 
@@ -48,14 +75,17 @@ class _SearchUserPage extends State<SearchUserPage> {
           icon: Icon(Icons.arrow_back_ios),
           color: Color(0xff373D3F),
         ),
+
         backgroundColor: Color(0xff63E2E0),
         centerTitle: true,
+
         title: Text(
           'SEARCH USER',
           style: TextStyle(
             color: Color(0xff373D3F),
           ),
         ),
+
         actions: <Widget>[
           IconButton(
             onPressed: () {
@@ -69,6 +99,8 @@ class _SearchUserPage extends State<SearchUserPage> {
           )
         ],
       ),
+
+
     );
   }
 }
@@ -134,7 +166,8 @@ class UserSearch extends SearchDelegate<String> {
                 SchedulerBinding.instance.addPostFrameCallback((_) {
 
                   // add your code here.//////////////
-
+                  print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                  print(index);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
