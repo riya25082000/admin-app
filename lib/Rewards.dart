@@ -31,6 +31,7 @@ class _RewardandReferState extends State<RewardandRefer> {
   ];
   TextEditingController bonus = TextEditingController();
   int total = 0;
+  DateTime today = DateTime.now();
   void SumBonus() async {
     setState(() {
       _loading = true;
@@ -51,6 +52,7 @@ class _RewardandReferState extends State<RewardandRefer> {
   }
 
   void insertBonus() async {
+    String t = today.toString();
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Rewards/AddBonus.php';
 
@@ -60,6 +62,7 @@ class _RewardandReferState extends State<RewardandRefer> {
           body: jsonEncode(<String, String>{
             "UserID": currentUserID,
             "Bonus": bonus.text,
+            "Date": t,
           }),
         )
         .timeout(const Duration(seconds: 30));

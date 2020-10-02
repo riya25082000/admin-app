@@ -27,6 +27,9 @@ class _RewardModifyState extends State<RewardModify> {
       {this.id, this.code, this.point, this.start, this.end, this.valid});
 
   Future RewardCodeUpdate() async {
+    String s, e;
+    s = start.toString();
+    e = end.toString();
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Rewards/RewardCodeUpdate.php';
     final response1 = await http.post(
@@ -34,8 +37,8 @@ class _RewardModifyState extends State<RewardModify> {
       body: jsonEncode(<String, String>{
         "RewardCode": code,
         "RewardPoints": point.toString(),
-        "Start": start.toString(),
-        "End": end.toString(),
+        "Start": s,
+        "End": e,
         "State": valid.toString(),
         "Rid": id.toString(),
       }),
