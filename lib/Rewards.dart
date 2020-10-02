@@ -1,11 +1,14 @@
 import 'package:adminapp/UserInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'dart:async';
-import 'dart:io';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
 import 'erroralert.dart';
+import 'dart:async';
+import 'dart:io';
+
 
 class RewardandRefer extends StatefulWidget {
   String currentUserID;
@@ -81,40 +84,61 @@ class _RewardandReferState extends State<RewardandRefer> {
       print(message);
     }
   }
+  bool _loading;
 
   void getReferData() async {
-    var url =
-        'http://sanjayagarwal.in/Finance App/UserApp/Profile/UserDetails.php';
-    final response = await http.post(
-      url,
-      body: jsonEncode(<String, String>{
-        "UserID": currentUserID,
-      }),
-    );
-    var message = await jsonDecode(response.body);
-    print("****************************************");
-    print(message);
-    print(message[0]['ReferalCode']);
-    print("****************************************");
     setState(() {
-      rCode = message[0]['ReferalCode'];
+      _loading = true;
     });
-    var url1 = 'http://sanjayagarwal.in/Finance App/ReferedToDetails.php';
-    final response1 = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{
-        "CodeUsed": message[0]['ReferalCode'],
-      }),
-    );
-    var message1 = await jsonDecode(response1.body);
-    print("****************************************");
-    print(message1);
-    print("****************************************");
+    try {
+      var url =
+          'http://sanjayagarwal.in/Finance App/UserApp/Profile/UserDetails.php';
+      final response = await http.post(
+        url,
+        body: jsonEncode(<String, String>{
+          "UserID": currentUserID,
+        }),
+      );
+      var message = await jsonDecode(response.body);
+      print("****************************************");
+      print(message);
+      print(message[0]['ReferalCode']);
+      print("****************************************");
+      setState(() {
+        rCode = message[0]['ReferalCode'];
+      });
+      var url1 = 'http://sanjayagarwal.in/Finance App/ReferedToDetails.php';
+      final response1 = await http.post(
+        url1,
+        body: jsonEncode(<String, String>{
+          "CodeUsed": message[0]['ReferalCode'],
+        }),
+      );
+      var message1 = await jsonDecode(response1.body);
+      print("****************************************");
+      print(message1);
+      print("****************************************");
+      setState(() {
+        _loading = false;
+      });
+    }
+    on TimeoutException catch (e) {
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
+
   }
 
-  bool _loading;
+
   List rew = [];
   void getRewardHistory() async {
+    setState(() {
+      _loading = true;
+    });
+
     var url =
         'http://sanjayagarwal.in/Finance App/UserApp/Rewards/RewardHistory.php';
     try {
@@ -132,6 +156,7 @@ class _RewardandReferState extends State<RewardandRefer> {
       print("****************************************");
       setState(() {
         rew = message;
+        _loading=false;
       });
     } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);

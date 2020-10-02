@@ -145,19 +145,33 @@ class _SupportState extends State<Support> {
   }
 
   void getCategoryAdvisor() async {
+    setState(() {
+      _loading=true;
+    });
     var url2 =
         'http://sanjayagarwal.in/Finance App/AdvisorApp/Support/SupportCategoryAdvisor.php';
-    final response2 = await http.post(
-      url2,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message2 = await jsonDecode(response2.body);
-    print("****************************************");
-    print(message2);
-    print("****************************************");
-    setState(() {
-      advisorcategory = message2;
-    });
+    try {
+      final response2 = await http.post(
+        url2,
+        body: jsonEncode(<String, String>{}),
+      );
+      var message2 = await jsonDecode(response2.body);
+      print("****************************************");
+      print(message2);
+      print("****************************************");
+      setState(() {
+        advisorcategory = message2;
+        _loading=false;
+      });
+    }
+    on TimeoutException catch (e){
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
+
   }
 
   @override
@@ -288,7 +302,14 @@ class _SupportState extends State<Support> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: _loading
+          ? Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+          backgroundColor: Color(0xff63E2E0),
+        ),
+      )
+      :SingleChildScrollView(
         physics: ScrollPhysics(),
         child: Column(
           children: <Widget>[

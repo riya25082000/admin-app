@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import '../erroralert.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
-import '../erroralert.dart';
+
+
 import 'ShowLetter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -78,18 +79,27 @@ class _NewsLetterState extends State<NewsLetter> {
     });
     var url =
         'http://sanjayagarwal.in/Finance App/UserApp/NewsLetter/NewsLetterDetails.php';
-    final response = await http.post(
-      url,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = await jsonDecode(response.body);
-    print("****************************************");
-    print(message);
-    print("****************************************");
-    setState(() {
-      letteruse = message;
-      _loading = false;
-    });
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode(<String, String>{}),
+      );
+      var message = await jsonDecode(response.body);
+      print("****************************************");
+      print(message);
+      print("****************************************");
+      setState(() {
+        letteruse = message;
+        _loading = false;
+      });
+    }
+    on TimeoutException catch (e) {
+      alerttimeout(context, currentUserID);
+    } on Error catch (e) {
+      alerterror(context, currentUserID);
+    } on SocketException catch (e) {
+      alertinternet(context, currentUserID);
+    }
   }
 
   Future AdvisorNewsInsert() async {
@@ -142,6 +152,9 @@ class _NewsLetterState extends State<NewsLetter> {
 
   List letteradvi = [];
   void getLetterAdvisor() async {
+    setState(() {
+      _loading = true;
+    });
     try {
       var url =
           'http://sanjayagarwal.in/Finance App/AdvisorApp/NewsLetter/NewsLetterDetailsAdvisor.php';
@@ -311,7 +324,14 @@ class _NewsLetterState extends State<NewsLetter> {
           ),
         ],
       ),
-      body: LayoutBuilder(
+      body: _loading
+          ? Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+          backgroundColor: Color(0xff63E2E0),
+        ),
+      ):
+      LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
           return SingleChildScrollView(
             physics: ScrollPhysics(),

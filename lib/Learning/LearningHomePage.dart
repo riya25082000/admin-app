@@ -19,9 +19,11 @@ class LearningHomePage extends StatefulWidget {
 
 class _LearningHomePageState extends State<LearningHomePage> {
   int x;
+  bool _loading;
 
   String get currentUserID => null;
   Future UserModuleUpdate() async {
+
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserModuleUpdate.php';
     final response1 = await http.post(
@@ -306,7 +308,7 @@ class _LearningHomePageState extends State<LearningHomePage> {
     });
   }
 
-  bool _loading;
+
   void getQuesUser() async {
     setState(() {
       _loading = true;
@@ -405,7 +407,14 @@ class _LearningHomePageState extends State<LearningHomePage> {
           ),
         ],
       ),
-      body: LayoutBuilder(
+      body: _loading
+          ? Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+          backgroundColor: Color(0xff63E2E0),
+        ),
+      )
+      :LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
           return SingleChildScrollView(
             physics: ScrollPhysics(),

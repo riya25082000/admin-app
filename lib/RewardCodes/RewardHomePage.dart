@@ -12,7 +12,11 @@ class ShowRewards extends StatefulWidget {
 
 class _ShowRewardsState extends State<ShowRewards> {
   List rewards = [];
+  bool _loading;
   void getRewardCodes() async {
+    setState(() {
+      _loading = true;
+    });
     var url2 =
         'http://sanjayagarwal.in/Finance App/AdminApp/Rewards/RewardCodeView.php';
     final response2 = await http.post(
@@ -25,6 +29,7 @@ class _ShowRewardsState extends State<ShowRewards> {
     print("****************************************");
     setState(() {
       rewards = message2;
+      _loading=false;
     });
   }
 
@@ -89,7 +94,14 @@ class _ShowRewardsState extends State<ShowRewards> {
           ),
         ],
       ),
-      body: LayoutBuilder(
+      body:_loading
+          ? Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+          backgroundColor: Color(0xff63E2E0),
+        ),
+      )
+          : LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
           var height = MediaQuery.of(context).size.height;
           var width = MediaQuery.of(context).size.width;

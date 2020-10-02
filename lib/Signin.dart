@@ -9,6 +9,10 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
+import 'dart:async';
+import 'dart:io';
+import 'erroralert.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -31,24 +35,28 @@ class _LoginPageState extends State<LoginPage> {
     String email = emailController.text;
     String password = passwordController.text;
     var url = 'http://sanjayagarwal.in/Finance App/adminSignin.php';
-    final response = await http.post(
-      url,
-      body: jsonEncode(<String, String>{
-        "email": email,
-        "Password": password,
-      }),
-    );
-    var message = jsonDecode(response.body);
-    if (message == "Login Matched") {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePage(
+     {
+      final response = await http.post(
+        url,
+        body: jsonEncode(<String, String>{
+          "email": email,
+          "Password": password,
+        }),
+      );
+      var message = jsonDecode(response.body);
+      if (message == "Login Matched") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomePage(
 
-              )));
-    } else { //
-      print(message);
+                    )));
+      } else { //
+        print(message);
+      }
     }
+
   }
 
   final _formKey2 = GlobalKey<FormState>();
