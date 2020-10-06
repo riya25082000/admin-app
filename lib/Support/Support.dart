@@ -43,10 +43,10 @@ class _SupportState extends State<Support> {
       body: jsonEncode(<String, String>{'sid': sno}),
     );
     var message = await jsonDecode(response.body);
-    if (message["message"] == "Successfully Deleted") {
+    if (message == "Successfully Deleted") {
       getCategoryUser();
     } else {
-      print(message["message"]);
+      print(message);
     }
   }
 
@@ -70,8 +70,7 @@ class _SupportState extends State<Support> {
         usercategory = message2;
         _loading = false;
       });
-    }
-    on TimeoutException catch (e){
+    } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
     } on Error catch (e) {
       alerterror(context, currentUserID);
@@ -104,11 +103,11 @@ class _SupportState extends State<Support> {
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Insertion") {
+    if (message1 == "Successful Insertion") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Support()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 
@@ -146,7 +145,7 @@ class _SupportState extends State<Support> {
 
   void getCategoryAdvisor() async {
     setState(() {
-      _loading=true;
+      _loading = true;
     });
     var url2 =
         'http://sanjayagarwal.in/Finance App/AdvisorApp/Support/SupportCategoryAdvisor.php';
@@ -161,17 +160,15 @@ class _SupportState extends State<Support> {
       print("****************************************");
       setState(() {
         advisorcategory = message2;
-        _loading=false;
+        _loading = false;
       });
-    }
-    on TimeoutException catch (e){
+    } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
     } on Error catch (e) {
       alerterror(context, currentUserID);
     } on SocketException catch (e) {
       alertinternet(context, currentUserID);
     }
-
   }
 
   @override
@@ -304,125 +301,125 @@ class _SupportState extends State<Support> {
       ),
       body: _loading
           ? Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-          backgroundColor: Color(0xff63E2E0),
-        ),
-      )
-      :SingleChildScrollView(
-        physics: ScrollPhysics(),
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: height * 0.2,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/app.jpg"),
-                  fit: BoxFit.cover,
-                ),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                backgroundColor: Color(0xff63E2E0),
               ),
+            )
+          : SingleChildScrollView(
+              physics: ScrollPhysics(),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.arrow_back_ios),
-                        color: Colors.white,
+                  Container(
+                    height: height * 0.2,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/app.jpg"),
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ),
-                  Center(
-                    child: Text(
-                      "How can we help you?",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Container(
-                          width: width * 0.6,
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              fillColor: Colors.white,
-                              hintText: "Enter your search here",
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(Icons.arrow_back_ios),
+                              color: Colors.white,
                             ),
-                            textAlign: TextAlign.center,
-                            controller: searchques,
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.search),
-                          color: Colors.white,
-                          onPressed: () {},
+                        Center(
+                          child: Text(
+                            "How can we help you?",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: width * 0.6,
+                                decoration: BoxDecoration(color: Colors.white),
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.white,
+                                    hintText: "Enter your search here",
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  controller: searchques,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.search),
+                                color: Colors.white,
+                                onPressed: () {},
+                              )
+                            ],
+                          ),
                         )
                       ],
                     ),
-                  )
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+// return object of type Dialog
+                          return AlertDialog(
+                            title: Text("New Help Category"),
+                            content: TextField(
+                              decoration: InputDecoration(
+                                  hintText: "Enter New Category Title"),
+                              controller: newcategory,
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("Add"),
+                                onPressed: () {
+                                  supp == 0
+                                      ? UserCategoryInsert()
+                                      : AdvisorCategoryInsert();
+                                },
+                              ),
+                              FlatButton(
+                                child: new Text("Close"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text(' + Add New Category '),
+                    color: Color(0xff63E2E0),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.black),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  supportwindow[supp],
                 ],
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            RaisedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-// return object of type Dialog
-                    return AlertDialog(
-                      title: Text("New Help Category"),
-                      content: TextField(
-                        decoration: InputDecoration(
-                            hintText: "Enter New Category Title"),
-                        controller: newcategory,
-                      ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text("Add"),
-                          onPressed: () {
-                            supp == 0
-                                ? UserCategoryInsert()
-                                : AdvisorCategoryInsert();
-                          },
-                        ),
-                        FlatButton(
-                          child: new Text("Close"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Text(' + Add New Category '),
-              color: Color(0xff63E2E0),
-              shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(30),
-              ),
-            ),
-            supportwindow[supp],
-          ],
-        ),
-      ),
     );
   }
 }
