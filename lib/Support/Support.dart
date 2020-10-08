@@ -28,10 +28,10 @@ class _SupportState extends State<Support> {
       body: jsonEncode(<String, String>{'sid': sno}),
     );
     var message = await jsonDecode(response.body);
-    if (message["message"] == "Successfully Deleted") {
+    if (message == "Successfully Deleted") {
       getCategoryAdvisor();
     } else {
-      print(message["message"]);
+      print(message);
     }
   }
 
@@ -80,25 +80,14 @@ class _SupportState extends State<Support> {
   }
 
   Future UserCategoryInsert() async {
-    var url1 =
-        'http://sanjayagarwal.in/Finance App/AdminApp/Support/UserLatestCategory.php';
-    final response = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = jsonDecode(response.body);
-    String oldu = message[0]['max(sid)'];
-    int bet = int.parse(oldu);
-    int latest = bet + 1;
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Support/UserCategoryInsert.php';
     print("****************************************************");
-    print("$latest ** ${newcategory.text}");
+    print("${newcategory.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
       body: jsonEncode(<String, String>{
-        'sid': latest.toString(),
         'sname': newcategory.text,
       }),
     );
@@ -112,34 +101,23 @@ class _SupportState extends State<Support> {
   }
 
   Future AdvisorCategoryInsert() async {
-    var url1 =
-        'http://sanjayagarwal.in/Finance App/AdminApp/Support/AdvisorLatestCategory.php';
-    final response = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = jsonDecode(response.body);
-    String oldu = message[0]['max(sid)'];
-    int bet = int.parse(oldu);
-    int latest = bet + 1;
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Support/AdvisorCategoryInsert.php';
     print("****************************************************");
-    print("$latest ** ${newcategory.text}");
+    print("${newcategory.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
       body: jsonEncode(<String, String>{
-        'sid': latest.toString(),
         'sname': newcategory.text,
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Insertion") {
+    if (message1 == "Successful Insertion") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Support()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 

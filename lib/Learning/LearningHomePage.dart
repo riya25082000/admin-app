@@ -23,7 +23,6 @@ class _LearningHomePageState extends State<LearningHomePage> {
 
   String get currentUserID => null;
   Future UserModuleUpdate() async {
-
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserModuleUpdate.php';
     final response1 = await http.post(
@@ -92,25 +91,14 @@ class _LearningHomePageState extends State<LearningHomePage> {
   }
 
   Future UserModuleInsert() async {
-    var url1 =
-        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/getUser.php';
-    final response = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = jsonDecode(response.body);
-    String oldu = message[0]['max(moduleno)'];
-    int bet = int.parse(oldu);
-    int latest = bet + 1;
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Learning/UserModuleInsert.php';
     print("****************************************************");
-    print("$latest ** ${umod.text}");
+    print("${umod.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
       body: jsonEncode(<String, String>{
-        'moduleno': latest.toString(),
         'modulename': umod.text,
       }),
     );
@@ -124,25 +112,14 @@ class _LearningHomePageState extends State<LearningHomePage> {
   }
 
   Future AdvisorModuleInsert() async {
-    var url1 =
-        'http://sanjayagarwal.in/Finance App/AdminApp/Learning/getAdvisor.php';
-    final response = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = jsonDecode(response.body);
-    String oldu = message[0]['max(moduleno)'];
-    int bet = int.parse(oldu);
-    int latest = bet + 1;
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Learning/AdvisorModuleInsert.php';
     print("****************************************************");
-    print("$latest ** ${amod.text}");
+    print("${amod.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
       body: jsonEncode(<String, String>{
-        'moduleno': latest.toString(),
         'modulename': amod.text,
       }),
     );
@@ -308,7 +285,6 @@ class _LearningHomePageState extends State<LearningHomePage> {
     });
   }
 
-
   void getQuesUser() async {
     setState(() {
       _loading = true;
@@ -409,89 +385,92 @@ class _LearningHomePageState extends State<LearningHomePage> {
       ),
       body: _loading
           ? Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-          backgroundColor: Color(0xff63E2E0),
-        ),
-      )
-      :LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
-            physics: ScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                backgroundColor: Color(0xff63E2E0),
               ),
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          person == 0 ? "User Modules" : "Advisor Modules",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color(0xff373D3F),
-                          ),
-                        ),
-                        RaisedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                // return object of type Dialog
-                                return AlertDialog(
-                                  title: Text(person == 0
-                                      ? "New User Module"
-                                      : "New Advisor Module"),
-                                  content: TextField(
-                                    decoration: InputDecoration(
-                                        hintText: "Enter New Module"),
-                                    controller: person == 0 ? umod : amod,
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text("Add"),
-                                      onPressed: () {
-                                        person == 0
-                                            ? UserModuleInsert()
-                                            : AdvisorModuleInsert();
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: new Text("Close"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Text(' + Add '),
-                          color: Color(0xff63E2E0),
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                      ],
+            )
+          : LayoutBuilder(
+              builder:
+                  (BuildContext context, BoxConstraints viewportConstraints) {
+                return SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: viewportConstraints.maxHeight,
                     ),
-                    SizedBox(
-                      height: 30,
+                    child: Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                person == 0
+                                    ? "User Modules"
+                                    : "Advisor Modules",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Color(0xff373D3F),
+                                ),
+                              ),
+                              RaisedButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      // return object of type Dialog
+                                      return AlertDialog(
+                                        title: Text(person == 0
+                                            ? "New User Module"
+                                            : "New Advisor Module"),
+                                        content: TextField(
+                                          decoration: InputDecoration(
+                                              hintText: "Enter New Module"),
+                                          controller: person == 0 ? umod : amod,
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("Add"),
+                                            onPressed: () {
+                                              person == 0
+                                                  ? UserModuleInsert()
+                                                  : AdvisorModuleInsert();
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: new Text("Close"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Text(' + Add '),
+                                color: Color(0xff63E2E0),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          usertype[person],
+                        ],
+                      ),
                     ),
-                    usertype[person],
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

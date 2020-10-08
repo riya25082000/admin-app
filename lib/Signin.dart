@@ -19,10 +19,34 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String currentUserID;
+  bool _loading = false;
   var val;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _isHidden = true;
+  String email, password;
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value)) {
+      _loading = false;
+      return 'Enter Valid Email';
+    } else
+      return null;
+  }
+
+  String validatePassword(String value) {
+    if (value.isEmpty) {
+      _loading = false;
+      return 'Please enter a password';
+    } else if (value.length < 8) {
+      _loading = false;
+      return 'Password must be greater than 8 alphabets';
+    } else {
+      return null;
+    }
+  }
 
   void _toggleVisibility() {
     setState(() {
@@ -31,8 +55,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future userLogin() async {
-    String email = emailController.text;
-    String password = passwordController.text;
     var url = 'http://sanjayagarwal.in/Finance App/AdminApp/adminSignin.php';
     {
       final response = await http.post(
@@ -47,16 +69,63 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       } else {
-        //
-        print(message);
+        setState(() {
+          _loading = false;
+        });
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Invalid Email/Password"),
+              content:
+                  Text("Username or Password is invalid. Please try again"),
+              actions: [
+                FlatButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => LoginPage()));
+                  },
+                  child: Text("Ok"),
+                )
+              ],
+            );
+          },
+        );
       }
     }
   }
 
-  final _formKey2 = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+  void _validateInputs() {
+    if (_formKey.currentState.validate()) {
+//    If all data are correct then save data to out variables
+      _formKey.currentState.save();
+      userLogin();
+    } else {
+//    If all data are not valid then start auto validation.
+      setState(() {
+        _autoValidate = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    Widget loadingIndicator = _loading
+        ? new Container(
+            width: 70.0,
+            height: 70.0,
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(
+                    child: new CircularProgressIndicator(
+                  backgroundColor: Color(0xff63E2E0),
+                ))),
+          )
+        : new Container();
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -87,29 +156,22 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Form(
+                      key: _formKey,
+                      autovalidate: _autoValidate,
                       child: Column(
                         children: [
                           TextFormField(
-                            controller: emailController,
-                            decoration: textfield("Phone Number/ Email"),
-                            validator: (value1) {
-                              if (value1.isEmpty) {
-                                return 'Please enter an email address';
-                              }
-                              if (st_validator.isEmail(value1)) {
-                                return 'Enter a valid email address';
-                              }
-                              if (value1.split('@').length != 2) {
-                                return 'Enter a valid email address';
-                              }
-                              return null;
+                            onSaved: (v1) {
+                              email = v1;
                             },
+                            decoration: textfield("Email"),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: validateEmail,
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           TextFormField(
-                            controller: passwordController,
                             obscureText: _isHidden,
                             decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
@@ -127,19 +189,14 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 suffixIcon: IconButton(
                                   onPressed: _toggleVisibility,
-                                  icon: Icon(Icons.visibility_off),
+                                  icon: _isHidden
+                                      ? Icon(Icons.visibility)
+                                      : Icon(Icons.visibility_off),
                                 )),
-                            validator: (String value) {
-                              val = value;
-                              if (value.isEmpty) {
-                                return 'Please enter a password';
-                              }
-                              if (value.length < 8) {
-                                return 'Password must be greater than 8 alphabets';
-                              }
-                              return null;
+                            validator: validatePassword,
+                            onSaved: (value) {
+                              password = value;
                             },
-                            onSaved: (value) {},
                           ),
                         ],
                       ),
@@ -151,7 +208,12 @@ class _LoginPageState extends State<LoginPage> {
                       height: 10,
                     ),
                     RaisedButton(
-                      onPressed: userLogin,
+                      onPressed: () {
+                        setState(() {
+                          _loading = true;
+                        });
+                        _validateInputs();
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -173,6 +235,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(
                       height: 30,
+                    ),
+                    new Align(
+                      child: loadingIndicator,
+                      alignment: FractionalOffset.center,
                     ),
                   ],
                 ),

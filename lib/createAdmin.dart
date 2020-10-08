@@ -1,19 +1,23 @@
-import 'package:adminapp/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class CreateAdvisor extends StatefulWidget {
+import 'HomePage.dart';
+
+class CreateAdmin extends StatefulWidget {
   @override
-  _CreateAdvisorState createState() => _CreateAdvisorState();
+  _CreateAdminState createState() => _CreateAdminState();
 }
 
-class _CreateAdvisorState extends State<CreateAdvisor> {
-  String advid = '';
-  TextEditingController name = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController phone = TextEditingController();
-  String e, n, p;
+class _CreateAdminState extends State<CreateAdmin> {
+  bool _isHidden = true;
+  void _toggleVisibility() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
+  }
+
+  String e, n, p, admid;
   bool _loading = false;
   String validateEmail(String value) {
     Pattern pattern =
@@ -23,14 +27,6 @@ class _CreateAdvisorState extends State<CreateAdvisor> {
       _loading = false;
       return 'Enter Valid Email';
     } else
-      return null;
-  }
-
-  String validateMobile(String value) {
-// Indian Mobile number are of 10 digit only
-    if (value.length != 10)
-      return 'Mobile Number must be of 10 digit';
-    else
       return null;
   }
 
@@ -47,7 +43,7 @@ class _CreateAdvisorState extends State<CreateAdvisor> {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
-      AdvisorInsert();
+      AdminCreate();
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
@@ -56,54 +52,54 @@ class _CreateAdvisorState extends State<CreateAdvisor> {
     }
   }
 
-  Future AdvisorInsert() async {
-    var url =
-        'http://sanjayagarwal.in/Finance App/AdminApp/CreateAdvisor/AdvisorInsert.php';
-    print("****************************************************");
-    print("${name.text} ** ${email.text}** ${phone.text}");
-    print("****************************************************");
-    final response1 = await http.post(
-      url,
-      body: jsonEncode(<String, String>{
-        'Email': e,
-      }),
-    );
-    var message1 = jsonDecode(response1.body);
-    print(message1);
-    if (message1 != null) {
-      setState(() {
-        advid = message1.toString();
-      });
-      AdvisorDetailsInsert();
+  String validatePassword(String value) {
+    if (value.isEmpty) {
+      _loading = false;
+      return 'Please enter a password';
+    } else if (value.length < 8) {
+      _loading = false;
+      return 'Password must be greater than 8 alphabets';
     } else {
-      print(message1);
+      return null;
     }
   }
 
-  Future AdvisorDetailsInsert() async {
+  Future AdminCreate() async {
     var url =
-        'http://sanjayagarwal.in/Finance App/AdminApp/CreateAdvisor/AdvisorDetailsInsert.php';
+        'http://sanjayagarwal.in/Finance App/AdminApp/CreateAdmin/CreateAdminAcc.php';
     print("****************************************************");
-    print("${name.text} ** ${email.text}** ${phone.text}");
+    print("${name.text} ** ${email.text}** ${password.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
       body: jsonEncode(<String, String>{
-        'AdvisorID': advid,
         'Name': n,
         'Email': e,
-        'Mobile': p,
+        'Password': p,
       }),
     );
     var message1 = jsonDecode(response1.body);
     print(message1);
     if (message1 == "Successful Insertion") {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+      setState(() {
+        admid = message1.toString();
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      });
     } else {
       print(message1);
     }
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  TextEditingController name = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController email = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +128,7 @@ class _CreateAdvisorState extends State<CreateAdvisor> {
         centerTitle: true,
         backgroundColor: Color(0xff63E2E0),
         title: Text(
-          'CREATE ADVISOR',
+          'CREATE ADMIN',
           style: TextStyle(
             color: Color(0xff373D3F),
           ),
@@ -195,8 +191,8 @@ class _CreateAdvisorState extends State<CreateAdvisor> {
                         ),
                         child: TextFormField(
                           validator: validateEmail,
-                          onSaved: (v3) {
-                            e = v3;
+                          onSaved: (v2) {
+                            e = v2;
                           },
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
@@ -206,7 +202,7 @@ class _CreateAdvisorState extends State<CreateAdvisor> {
                     Container(
                       alignment: Alignment.centerLeft,
                       margin: EdgeInsets.fromLTRB(30, 20, 0, 10),
-                      child: Text("Mobile No.",
+                      child: Text("Password",
                           style: TextStyle(
                             color: Color(0xff373D3F),
                             fontSize: 25,
@@ -221,14 +217,20 @@ class _CreateAdvisorState extends State<CreateAdvisor> {
                         color: Color(0xfffffff).withOpacity(0.9),
                       ),
                       child: TextFormField(
-                        validator: validateMobile,
+                        validator: validatePassword,
                         onSaved: (v3) {
                           p = v3;
                         },
-                        keyboardType: TextInputType.number,
+                        obscureText: _isHidden,
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Enter your Mobile No.'),
+                            hintText: 'Enter your Password',
+                            suffixIcon: IconButton(
+                              onPressed: _toggleVisibility,
+                              icon: _isHidden
+                                  ? Icon(Icons.visibility)
+                                  : Icon(Icons.visibility_off),
+                            )),
                       ),
                     ),
                     RaisedButton(
@@ -242,7 +244,7 @@ class _CreateAdvisorState extends State<CreateAdvisor> {
                         _validateInputs();
                       },
                       child: Text(
-                        "Create Advisor",
+                        "Create Admin",
                         style: TextStyle(
                             color: Color(0xff373D3F),
                             fontSize: 25,

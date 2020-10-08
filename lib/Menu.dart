@@ -3,6 +3,7 @@ import 'package:adminapp/NewsLetter/NewsLetter.dart';
 import 'package:adminapp/RewardCodes/RewardHomePage.dart';
 import 'package:adminapp/Rewards.dart';
 import 'package:adminapp/SearchUser.dart';
+import 'package:adminapp/createAdmin.dart';
 import 'package:adminapp/createAdvisor.dart';
 import 'package:flutter/material.dart';
 import 'EarnPage/EarnMethods.dart';
@@ -78,6 +79,15 @@ class _AdminMenuState extends State<AdminMenu> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) => CreateAdvisor()));
+            },
+          ),
+          ListTile(
+            title: Text('Create Admin'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => CreateAdmin()));
             },
           ),
           ListTile(

@@ -26,10 +26,10 @@ class _showQuestionState extends State<showQuestion> {
       body: jsonEncode(<String, String>{'qid': qno}),
     );
     var message = await jsonDecode(response.body);
-    if (message["message"] == "Successfully Deleted") {
+    if (message == "Successfully Deleted") {
       getQuesAdvisor();
     } else {
-      print(message["message"]);
+      print(message);
     }
   }
 
@@ -41,78 +41,56 @@ class _showQuestionState extends State<showQuestion> {
       body: jsonEncode(<String, String>{'qid': qno}),
     );
     var message = await jsonDecode(response.body);
-    if (message["message"] == "Successfully Deleted") {
+    if (message == "Successfully Deleted") {
       getQuesUser();
     } else {
-      print(message["message"]);
+      print(message);
     }
   }
 
   Future UserQuestionInsert() async {
-    var url1 =
-        'http://sanjayagarwal.in/Finance App/AdminApp/Support/UserLatestQuestion.php';
-    final response = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = jsonDecode(response.body);
-    String oldu = message[0]['max(qid)'];
-    int bet = int.parse(oldu);
-    int latest = bet + 1;
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Support/UserQuestionInsert.php';
     print("****************************************************");
-    print("$latest ** ${q.text} ** ${a.text}");
+    print("${q.text} ** ${a.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
       body: jsonEncode(<String, String>{
         'sid': widget.suid.toString(),
-        'qid': latest.toString(),
         'question': q.text,
         'answer': a.text
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Insertion") {
+    if (message1 == "Successful Insertion") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Support()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 
   Future AdvisorQuestionInsert() async {
-    var url1 =
-        'http://sanjayagarwal.in/Finance App/AdminApp/Support/AdvisorLatestQuestion.php';
-    final response = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = jsonDecode(response.body);
-    String oldu = message[0]['max(qid)'];
-    int bet = int.parse(oldu);
-    int latest = bet + 1;
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/Support/AdvisorQuestionInsert.php';
     print("****************************************************");
-    print("$latest ** ${q.text} ** ${a.text}");
+    print("${q.text} ** ${a.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
       body: jsonEncode(<String, String>{
         'sid': widget.suid.toString(),
-        'qid': latest.toString(),
         'question': q.text,
         'answer': a.text
       }),
     );
     var message1 = jsonDecode(response1.body);
-    if (message1["message"] == "Successful Insertion") {
+    if (message1 == "Successful Insertion") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Support()));
     } else {
-      print(message1["message"]);
+      print(message1);
     }
   }
 

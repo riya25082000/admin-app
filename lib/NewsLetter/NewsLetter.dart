@@ -4,7 +4,6 @@ import '../erroralert.dart';
 
 import 'package:flutter/material.dart';
 
-
 import 'ShowLetter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -24,28 +23,15 @@ class _NewsLetterState extends State<NewsLetter> {
   String get currentUserID => null;
 
   Future UserNewsInsert() async {
-    var url1 =
-        'http://sanjayagarwal.in/Finance App/AdminApp/NewsLetter/UserLatest.php';
-    final response = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = jsonDecode(response.body);
-    String oldu = message[0]['max(nid)'];
-    int bet = int.parse(oldu);
-    int latest = bet + 1;
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/NewsLetter/UserNewsInsert.php';
     print("****************************************************");
-    print("$latest ** ${newletter.text} ** ${newurl.text}");
+    print("${newletter.text} ** ${newurl.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
-      body: jsonEncode(<String, String>{
-        'nid': latest.toString(),
-        'ntitle': newletter.text,
-        'nurl': newurl.text
-      }),
+      body: jsonEncode(
+          <String, String>{'ntitle': newletter.text, 'nurl': newurl.text}),
     );
     var message1 = jsonDecode(response1.body);
     if (message1 == "Successful Insertion") {
@@ -92,8 +78,7 @@ class _NewsLetterState extends State<NewsLetter> {
         letteruse = message;
         _loading = false;
       });
-    }
-    on TimeoutException catch (e) {
+    } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
     } on Error catch (e) {
       alerterror(context, currentUserID);
@@ -103,28 +88,15 @@ class _NewsLetterState extends State<NewsLetter> {
   }
 
   Future AdvisorNewsInsert() async {
-    var url1 =
-        'http://sanjayagarwal.in/Finance App/AdminApp/NewsLetter/AdvisorLatest.php';
-    final response = await http.post(
-      url1,
-      body: jsonEncode(<String, String>{}),
-    );
-    var message = jsonDecode(response.body);
-    String oldu = message[0]['max(nid)'];
-    int bet = int.parse(oldu);
-    int latest = bet + 1;
     var url =
         'http://sanjayagarwal.in/Finance App/AdminApp/NewsLetter/AdvisorNewsInsert.php';
     print("****************************************************");
-    print("$latest ** ${newletter.text} ** ${newurl.text}");
+    print("${newletter.text} ** ${newurl.text}");
     print("****************************************************");
     final response1 = await http.post(
       url,
-      body: jsonEncode(<String, String>{
-        'nid': latest.toString(),
-        'ntitle': newletter.text,
-        'nurl': newurl.text
-      }),
+      body: jsonEncode(
+          <String, String>{'ntitle': newletter.text, 'nurl': newurl.text}),
     );
     var message1 = jsonDecode(response1.body);
     if (message1 == "Successful Insertion") {
@@ -326,97 +298,100 @@ class _NewsLetterState extends State<NewsLetter> {
       ),
       body: _loading
           ? Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-          backgroundColor: Color(0xff63E2E0),
-        ),
-      ):
-      LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
-            physics: ScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                backgroundColor: Color(0xff63E2E0),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          c == 0 ? 'User News Letter' : 'Advisor News Letter',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color(0xff373D3F),
-                          ),
-                        ),
-                        RaisedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-// return object of type Dialog
-                                return AlertDialog(
-                                  title: Text("New News Letter"),
-                                  content: Container(
-                                    height: height * 0.15,
-                                    child: Column(
-                                      children: <Widget>[
-                                        TextField(
-                                          decoration: InputDecoration(
-                                              hintText:
-                                                  "Enter News Letter Title"),
-                                          controller: newletter,
-                                        ),
-                                        TextField(
-                                          decoration: InputDecoration(
-                                              hintText:
-                                                  "Enter URL of News Letter"),
-                                          controller: newurl,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text("Add"),
-                                      onPressed: () {
-                                        c == 0
-                                            ? UserNewsInsert()
-                                            : AdvisorNewsInsert();
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: new Text("Close"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Text(' + Add '),
-                          color: Color(0xff63E2E0),
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                      ],
+            )
+          : LayoutBuilder(
+              builder:
+                  (BuildContext context, BoxConstraints viewportConstraints) {
+                return SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: viewportConstraints.maxHeight,
                     ),
-                    newsletterbody[c],
-                  ],
-                ),
-              ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                c == 0
+                                    ? 'User News Letter'
+                                    : 'Advisor News Letter',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Color(0xff373D3F),
+                                ),
+                              ),
+                              RaisedButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+// return object of type Dialog
+                                      return AlertDialog(
+                                        title: Text("New News Letter"),
+                                        content: Container(
+                                          height: height * 0.15,
+                                          child: Column(
+                                            children: <Widget>[
+                                              TextField(
+                                                decoration: InputDecoration(
+                                                    hintText:
+                                                        "Enter News Letter Title"),
+                                                controller: newletter,
+                                              ),
+                                              TextField(
+                                                decoration: InputDecoration(
+                                                    hintText:
+                                                        "Enter URL of News Letter"),
+                                                controller: newurl,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("Add"),
+                                            onPressed: () {
+                                              c == 0
+                                                  ? UserNewsInsert()
+                                                  : AdvisorNewsInsert();
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: new Text("Close"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Text(' + Add '),
+                                color: Color(0xff63E2E0),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                            ],
+                          ),
+                          newsletterbody[c],
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
