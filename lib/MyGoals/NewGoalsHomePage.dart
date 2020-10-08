@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
@@ -22,7 +22,7 @@ class NewGoalsPage extends StatefulWidget {
 class _NewGoalsPageState extends State<NewGoalsPage> {
   String currentUserID;
   _NewGoalsPageState({@required this.currentUserID});
-  int current = 0;
+  int current = 0, time = 0;
   void changes(int index) {
     setState(() {
       current = index;
@@ -47,29 +47,35 @@ class _NewGoalsPageState extends State<NewGoalsPage> {
     }
   }
 
+  int visiblenature = 0;
   void getGoals() async {
     setState(() {
       _loading = true;
     });
+    var url =
+        'http://sanjayagarwal.in/Finance App/UserApp/Goals/GoalDetails.php';
     try {
-      var url =
-          'http://sanjayagarwal.in/Finance App/UserApp/Goals/GoalDetails.php';
-      final response = await http.post(
-        url,
-        body: jsonEncode(<String, String>{
-          "UserID": currentUserID,
-        }),
-      ).timeout(Duration(seconds: 30));
+      final response = await http
+          .post(
+            url,
+            body: jsonEncode(<String, String>{
+              "UserID": currentUserID,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
       var message = await jsonDecode(response.body);
       print("****************************************");
       print(message);
       print("****************************************");
+      if (message.length == 0) {
+        visiblenature = 1;
+      }
       setState(() {
         data = message;
         _loading = false;
       });
-    }
-    on TimeoutException catch (e){
+      print(data);
+    } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
     } on Error catch (e) {
       alerterror(context, currentUserID);
@@ -281,7 +287,7 @@ class _NewGoalsPageState extends State<NewGoalsPage> {
         backgroundColor: Color(0xff63E2E0),
         centerTitle: true,
         title: Text(
-          'USER GOALS',
+          'MY GOALS',
           style: TextStyle(color: Color(0xff373D3F)),
         ),
         actions: <Widget>[
@@ -350,6 +356,18 @@ class _NewGoalsPageState extends State<NewGoalsPage> {
                         ),
                       ),
                     ],
+                  ),
+                  Visibility(
+                    visible: visiblenature == 1 ? true : false,
+                    child: Column(
+                      children: [
+                        Text("No goals have been added"),
+                        Icon(
+                          Icons.warning,
+                          size: 50,
+                        ),
+                      ],
+                    ),
                   ),
                   goalsoptions[current],
                 ],

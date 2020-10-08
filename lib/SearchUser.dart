@@ -17,10 +17,8 @@ class SearchUserPage extends StatefulWidget {
 class _SearchUserPage extends State<SearchUserPage> {
   List searchList = [];
 
-
   get currentUserID => null;
   Future userSearchData() async {
-
     try {
       var url = 'http://sanjayagarwal.in/Finance App/SearchUser.php';
       final response = await http.post(url);
@@ -33,16 +31,13 @@ class _SearchUserPage extends State<SearchUserPage> {
 
         print(searchList);
       }
-
-    }
-    on TimeoutException catch (e) {
+    } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
     } on Error catch (e) {
       alerterror(context, currentUserID);
     } on SocketException catch (e) {
       alertinternet(context, currentUserID);
     }
-
   }
 
   @override
@@ -63,29 +58,24 @@ class _SearchUserPage extends State<SearchUserPage> {
       //   ),
       // ),
       appBar: AppBar(
-
         leading: IconButton(
           onPressed: () {
-
             SchedulerBinding.instance.addPostFrameCallback((_) {
               Navigator.pop(context);
             });
-           // Navigator.pop(context);
+            // Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back_ios),
           color: Color(0xff373D3F),
         ),
-
         backgroundColor: Color(0xff63E2E0),
         centerTitle: true,
-
         title: Text(
           'SEARCH USER',
           style: TextStyle(
             color: Color(0xff373D3F),
           ),
         ),
-
         actions: <Widget>[
           IconButton(
             onPressed: () {
@@ -99,8 +89,6 @@ class _SearchUserPage extends State<SearchUserPage> {
           )
         ],
       ),
-
-
     );
   }
 }
@@ -164,7 +152,6 @@ class UserSearch extends SearchDelegate<String> {
                 var list = snapshot.data[index];
 
                 SchedulerBinding.instance.addPostFrameCallback((_) {
-
                   // add your code here.//////////////
                   print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
                   print(index);
@@ -172,8 +159,8 @@ class UserSearch extends SearchDelegate<String> {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) => UserInfo(
-                            currentUserID: "987654321",
-                          )));
+                                currentUserID: list['UserID'],
+                              )));
                 });
 
                 return ListTile(

@@ -5,6 +5,7 @@ import 'package:adminapp/Rewards.dart';
 import 'package:adminapp/SearchUser.dart';
 import 'package:adminapp/createAdvisor.dart';
 import 'package:flutter/material.dart';
+import 'EarnPage/EarnMethods.dart';
 import 'SearchAdvisor.dart';
 import 'Support/Support.dart';
 
@@ -97,6 +98,15 @@ class _AdminMenuState extends State<AdminMenu> {
                       builder: (BuildContext context) => RewardandRefer(
                             currentUserID: "987654321",
                           )));
+            },
+          ),
+          ListTile(
+            title: Text('Earning Methods'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EarnMethods()));
             },
           ),
           ListTile(

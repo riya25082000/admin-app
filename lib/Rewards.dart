@@ -9,7 +9,6 @@ import 'erroralert.dart';
 import 'dart:async';
 import 'dart:io';
 
-
 class RewardandRefer extends StatefulWidget {
   String currentUserID;
   RewardandRefer({@required this.currentUserID});
@@ -84,6 +83,7 @@ class _RewardandReferState extends State<RewardandRefer> {
       print(message);
     }
   }
+
   bool _loading;
 
   void getReferData() async {
@@ -121,17 +121,14 @@ class _RewardandReferState extends State<RewardandRefer> {
       setState(() {
         _loading = false;
       });
-    }
-    on TimeoutException catch (e) {
+    } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
     } on Error catch (e) {
       alerterror(context, currentUserID);
     } on SocketException catch (e) {
       alertinternet(context, currentUserID);
     }
-
   }
-
 
   List rew = [];
   void getRewardHistory() async {
@@ -156,7 +153,7 @@ class _RewardandReferState extends State<RewardandRefer> {
       print("****************************************");
       setState(() {
         rew = message;
-        _loading=false;
+        _loading = false;
       });
     } on TimeoutException catch (e) {
       alerttimeout(context, currentUserID);
@@ -167,10 +164,30 @@ class _RewardandReferState extends State<RewardandRefer> {
     }
   }
 
+  double counter = 0.0;
+  void ReferredTotal() async {
+    var url3 =
+        'http://sanjayagarwal.in/Finance App/UserApp/Rewards/RewardGraph1.php';
+    final response3 = await http.post(
+      url3,
+      body: jsonEncode(<String, String>{
+        "PromoCode": rCode,
+      }),
+    );
+    var message3 = jsonDecode(response3.body);
+    setState(() {
+      counter = double.parse(message3[0]["count(UserID)"]);
+      print("**********");
+      print(counter);
+      counter = counter / 12;
+    });
+  }
+
   @override
   void initState() {
     getReferData();
     getRewardHistory();
+    ReferredTotal();
     SumBonus();
     // TODO: implement initState
     super.initState();
@@ -226,7 +243,7 @@ class _RewardandReferState extends State<RewardandRefer> {
                             ),
                             LinearPercentIndicator(
                               lineHeight: 14.0,
-                              percent: 0.3,
+                              percent: counter,
                               backgroundColor: Colors.grey,
                               progressColor: Color(0xff63E2E0),
                             ),
@@ -279,23 +296,6 @@ class _RewardandReferState extends State<RewardandRefer> {
                                     style: TextStyle(
                                         fontSize: height * 0.03,
                                         color: Color(0xFF373D3F)),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15),
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: Text('Copy Code',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: height * 0.02,
-                                                color: Color(0xff373D3F))),
-                                      ),
-                                    ),
                                   ),
                                 ),
                               ],
@@ -355,8 +355,6 @@ class _RewardandReferState extends State<RewardandRefer> {
                                       ),
                                     ),
                                   ),
-                                  textAlign: TextAlign.left,
-                                  textAlignVertical: TextAlignVertical.bottom,
                                   style: TextStyle(
                                       color: Color(0xff373D3F),
                                       fontSize: height * 0.02),

@@ -3,8 +3,7 @@ import 'package:adminapp/MyGoals/NewGoalsHomePage.dart';
 import 'package:adminapp/SearchUser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
-import 'Rewards.dart';
+import 'package:adminapp/RewardsRefer/newRefer.dart';
 
 class UserInfo extends StatefulWidget {
   String currentUserID;
@@ -27,9 +26,7 @@ class _UserInfoState extends State<UserInfo> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) => SearchUserPage()));
-
             });
-
           },
           icon: Icon(Icons.arrow_back_ios),
           color: Color(0xff373D3F),
@@ -60,7 +57,7 @@ class _UserInfoState extends State<UserInfo> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => NewGoalsPage(
-                                    currentUserID: "987654321",
+                                    currentUserID: currentUserID,
                                   )));
                     },
                     child: Container(
@@ -78,7 +75,7 @@ class _UserInfoState extends State<UserInfo> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => income2(
-                                    currentUserID: "987654321",
+                                    currentUserID: currentUserID,
                                   )));
                     },
                     child: Container(
@@ -96,7 +93,7 @@ class _UserInfoState extends State<UserInfo> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => RewardandRefer(
-                                    currentUserID: "987654321",
+                                    currentUserID: currentUserID,
                                   )));
                     },
                     child: Container(

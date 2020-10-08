@@ -57,7 +57,7 @@ class _ModifyGoalsPageState extends State<ModifyGoalsPage> {
                     currentUserID: currentUserID,
                   )));
     } else {
-      print(message1);
+      print(message1["message"]);
     }
   }
 
