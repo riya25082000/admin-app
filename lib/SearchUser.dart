@@ -20,7 +20,7 @@ class _SearchUserPage extends State<SearchUserPage> {
   get currentUserID => null;
   Future userSearchData() async {
     try {
-      var url = 'http://sanjayagarwal.in/Finance App/SearchUser.php';
+      var url = 'http://sanjayagarwal.in/Finance App/SearchUser1.php';
       final response = await http.post(url);
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
@@ -154,7 +154,7 @@ class UserSearch extends SearchDelegate<String> {
                 SchedulerBinding.instance.addPostFrameCallback((_) {
                   // add your code here.//////////////
                   print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-                  print(index);
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
