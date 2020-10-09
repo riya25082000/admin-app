@@ -16,6 +16,8 @@ class SearchAdvisorPage extends StatefulWidget {
 class _SearchAdvisorPage extends State<SearchAdvisorPage> {
   List searchList = [];
 
+
+
   String get currentUserID => null;
   Future userAdvisorData() async {
     var url = 'http://sanjayagarwal.in/Finance App/SearchAdvisor.php';
@@ -45,6 +47,7 @@ class _SearchAdvisorPage extends State<SearchAdvisorPage> {
   void initState() {
     super.initState();
     userAdvisorData();
+
   }
 
   @override

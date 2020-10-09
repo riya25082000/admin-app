@@ -278,7 +278,11 @@ class _showQuestionState extends State<showQuestion> {
                       padding: const EdgeInsets.only(top: 10.0),
                       child: IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => Support()));
+                          //Navigator.pop(context);
                         },
                         icon: Icon(Icons.arrow_back_ios),
                         color: Colors.white,
